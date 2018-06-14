@@ -17,21 +17,20 @@ export default class Pop extends Component {
             }
         }
         const { closePop } = this.props
-        closePop()
+        closePop(false)
     }
     render() {
         const { isShow } = this.props
         return (
             <div onClick={ (e) => this.closePop(e, true) } className={ classnames('pop_container', {
-                none: !isShow
+                init: !isShow
             }) }>
-                <div className='pop_transition_box'>
-                    <div className='pop_content' ref={ e => this.box = e }>
-                        {
-                            Children.map(this.props.children, child => child)
-                        }
-                        <a className='close' onClick={ e => this.closePop(e) } href='javascript:;'>&times;</a>
-                    </div>
+                <div className='pop_transition_box'>蒙板层</div>
+                <div className='pop_content' ref={ e => this.box = e }>
+                    {
+                        isShow && Children.map(this.props.children, child => child)
+                    }
+                    <a className='close' onClick={ e => this.closePop(e) } href='javascript:;'>&times;</a>
                 </div>
             </div>
         )
