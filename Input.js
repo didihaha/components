@@ -6,9 +6,13 @@ export default class Input extends Component {
         onChange: PropTypes.func.isRequired,            // 修改value事件
         value: PropTypes.string.isRequired,             // 绑定的value值
         reg: PropTypes.instanceOf(RegExp),              // 输入值匹配正则
+        className: PropTypes.string,
+        style: PropTypes.object
     }
     static defaultProps = {
-        reg: /^(\s|\S){0,}$/                            //  默认为任意字符
+        reg: /^(\s|\S){0,}$/,                           // 默认为任意字符
+        className: '',
+        style: {}
     }
     changeValue (e) {
         const { reg, onChange } = this.props,
@@ -20,9 +24,9 @@ export default class Input extends Component {
         }
     }
     render() {
-        const { value } = this.props
+        const { value, className, style } = this.props
         return (
-            <input value={ value } onChange={ e => this.changeValue(e) } />
+            <input className={ className } value={ value } onChange={ e => this.changeValue(e) } style={ style } />
         )
     }
 }
