@@ -3,26 +3,24 @@ import React, { Component, Children } from 'react'
 import { IProps, IState } from './PlayerProps'
 import classnames from 'classnames'
 
-
 export default class AudioPlayer extends Component<IProps, IState> {
     audio: HTMLAudioElement | null
     static defaultProps = {
         audioInfo: {
             audioSrc: '',
             key: '&&' + Math.random().toString(36).slice(2)
-        },
-        audioConfig: {
+        }
+    }
+    constructor (props: IProps) {
+        super(props)
+        this.audio = null
+        this.state = Object.assign({
             showPlayer: true,
             showPlayerBtn: true,
             clickAudio: (e: boolean) => null,
             audioEnd: () => null,
             isPlayinyAfterMount: false
-        }
-        
-    }
-    constructor (props: IProps) {
-        super(props)
-        this.audio = null
+        }, this.props.audioConfig)
     }
     // 音频播放完毕调用该方法
     audioPlayEnd () {
@@ -30,7 +28,7 @@ export default class AudioPlayer extends Component<IProps, IState> {
     }
     // 播放按钮绑定的事件
     handdleAudio (): void {
-        this.props.audioConfig!.clickAudio!(this.audio!.paused)
+        // this.props.audioConfig!.clickAudio!(this.audio!.paused)
         if (this.audio) {
             if (this.audio.paused) {
                 this.audio.play()
@@ -41,7 +39,6 @@ export default class AudioPlayer extends Component<IProps, IState> {
         this.forceUpdate()
     }
     static getDrivedStateFromProps () {
-        console.log(9890)
         return null
     }
     shouldComponentUpdate (nextProps: IProps, _nextState: IState): boolean {
@@ -58,14 +55,15 @@ export default class AudioPlayer extends Component<IProps, IState> {
         }
     }
     render() {
-        const { children, audioInfo, audioConfig } = this.props
+        const { children, audioInfo } = this.props
+        const { showPlayerBtn, showPlayer } = this.state
         return (
             <div className={ classnames('audio-player', {
-                none: !audioConfig!.showPlayer
+                none: showPlayer
             }) }>
                 { Children.map(children, (child: React.ReactNode) => child) }
                 {
-                    audioConfig!.showPlayerBtn && (
+                    showPlayerBtn && (
                         <div
                             className={ classnames('audio-btn', {
                                 on: this.audio && !this.audio.paused
@@ -78,10 +76,5 @@ export default class AudioPlayer extends Component<IProps, IState> {
                 <audio ref={ e => this.audio = e } onEnded={ this.audioPlayEnd.bind(this) } src={ audioInfo!.audioSrc } hidden />
             </div>
         )
-    }
-    componentDidMount () {
-        if (this.props.audioConfig!.isPlayinyAfterMount) {
-            this.handdleAudio()
-        }
     }
 }
